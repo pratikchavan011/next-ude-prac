@@ -33,3 +33,8 @@ a {
   justify-content: center;
   align-items: center;
 }
+
+.center{
+  margin: auto;
+  text-align: center;
+}
