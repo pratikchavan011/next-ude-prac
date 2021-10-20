@@ -1,10 +1,9 @@
-import Head from 'next/head'
-import EventList from '../component/events/event-list';
+import Head from "next/head";
+import EventList from "../component/events/event-list";
+import { getFeaturedEvents } from "../helper/api-utils";
 
-import {getFeaturedEvents} from '../data/dummy-data';
-
-export default function Home() {
-  const FeaturedEvents = getFeaturedEvents()
+export default function Home(props) {
+  const { FeaturedEvents } = props;
   return (
     <div className="home-container">
       <Head>
@@ -17,5 +16,22 @@ export default function Home() {
         <EventList items={FeaturedEvents} />
       </main>
     </div>
-  )
+  );
+}
+
+export async function getStaticProps(context) {
+  let FeaturedEvents = [];
+  try {
+    FeaturedEvents = await getFeaturedEvents();
+  } catch (error) {
+    console.error("HANDLED ERROR!", error);
+  }
+
+  return {
+    props: {
+      FeaturedEvents,
+      notFound: Boolean(FeaturedEvents.length),
+      revalidate: 24 * 60 * 60,
+    },
+  };
 }
